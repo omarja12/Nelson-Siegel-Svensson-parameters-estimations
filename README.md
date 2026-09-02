@@ -83,7 +83,7 @@ $$
 and minimizes the sum of squared differences between the model and the observed yields:
 
 $$
-\operatorname{SSE}(p) = \sum_{i=1}^{n} \left[y(t_i; p) - y_i\right]^2
+\mathrm{SSE}(p) = \sum_{i=1}^{n} \left[y(t_i; p) - y_i\right]^2
 $$
 
 The fitted vector $p$ contains $(\beta_0, \beta_1, \beta_2, \beta_3, \tau_1, \tau_2)$. The implementation uses `scipy.optimize.minimize` independently for each of the five market dates. Once calibrated, the same function $y(t; p)$ can evaluate the curve at any positive maturity, including the synthetic tenors used in the project.
@@ -105,11 +105,11 @@ Repeating this calculation for every date creates a time series for each selecte
 An actual-day convention expresses the time between two dates as a fraction of a chosen denominator. For start date $d_s$ and end date $d_e$:
 
 $$
-\operatorname{DCF}_{\text{Act/360}} = \frac{\operatorname{days}(d_s, d_e)}{360}
+\mathrm{DCF}_{\text{Act/360}} = \frac{\mathrm{days}(d_s, d_e)}{360}
 $$
 
 $$
-\operatorname{DCF}_{\text{Act/365}} = \frac{\operatorname{days}(d_s, d_e)}{365}
+\mathrm{DCF}_{\text{Act/365}} = \frac{\mathrm{days}(d_s, d_e)}{365}
 $$
 
 The denominator changes the year fraction and therefore changes interest accrual or discounting. The Python implementation parses dates in `DD-MM-YYYY` format and supports both conventions explicitly.
