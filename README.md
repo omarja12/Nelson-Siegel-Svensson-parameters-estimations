@@ -4,7 +4,7 @@
 
 Curve Lab is a compact computational-finance project that estimates smooth yield curves from a small set of observed market rates. It uses the Nelson-Siegel-Svensson (NSS) model to describe the level, slope, and curvature of the term structure across five dated snapshots from 2020.
 
-The project started as an individual computational-finance assignment and is preserved as an intentionally old, reproducible research artifact. The original data file and notebook remain in the repository; the portfolio page and standalone script make the work easier to explore today.
+The repository preserves the original data file and notebook as a reproducible research artifact, while the portfolio page and standalone script present the workflow as a focused fixed-income analytics case study.
 
 ## Explore the project
 
