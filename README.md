@@ -110,13 +110,15 @@ This is a direct unweighted least-squares calibration rather than a production p
 
 ### Interpolation and curve evolution
 
-The model is used to estimate rates at 9M, 3.5Y, 12.5Y, and 25Y. These maturities are not all present in the source quotes, but evaluating the calibrated function at each requested $t$ produces a consistent model-based interpolation:
+The model is used to estimate rates at 9M, 3.5Y, 12.5Y, and 25Y. These maturities are not all present in the source quotes. Instead of drawing a straight line between two neighboring observations, the project evaluates the calibrated NSS function at each requested maturity. This preserves the model's level, slope, and curvature assumptions:
 
 $$
 \widehat{y}(t_s) = y(t_s; \widehat{p})
 $$
 
-Repeating this calculation for every date creates a time series for each selected maturity. Comparing those series shows how the term structure moved during the archived observation window.
+Here $t_s$ is the selected maturity and $\widehat{p}$ is the parameter vector estimated for that date. For example, the 9M estimate is obtained by converting 9M to $0.75$ years and evaluating $y(0.75; \widehat{p})$. Repeating this calculation for every date creates a time series for each selected maturity. Comparing those series shows how the term structure moved during the archived observation window.
+
+This is interpolation when $t_s$ lies inside the quoted range and model-based extrapolation when it lies beyond the available quotes. The 25Y estimate is an interpolation between the 20Y and 30Y observations; a request beyond 30Y would be an extrapolation and should be treated with more caution.
 
 ### Day-count fractions
 
@@ -130,7 +132,7 @@ $$
 \mathrm{DCF}_{\text{Act/365}} = \frac{\mathrm{days}(d_s, d_e)}{365}
 $$
 
-The denominator changes the year fraction and therefore changes interest accrual or discounting. The Python implementation parses dates in `DD-MM-YYYY` format and supports both conventions explicitly.
+The denominator changes the year fraction and therefore changes interest accrual or discounting. For the example dates 15-06-2020 and 15-12-2021, the elapsed 548 days gives approximately $1.5222$ under Act/360 and $1.5014$ under Act/365. The Python implementation parses dates in `DD-MM-YYYY` format and supports both conventions explicitly.
 
 ### Present value
 
@@ -140,7 +142,13 @@ $$
 PV = \frac{FV}{(1+r)^T}
 $$
 
-The example in the project discounts EUR 2,430.04 received in five years at 5%. In a full fixed-income valuation, the rate would normally be consistent with the instrument's compounding convention, day-count basis, and payment schedule.
+For the project example, $FV = 2430.04$, $r = 0.05$, and $T = 5$, so:
+
+$$
+PV = \frac{2430.04}{(1.05)^5} \approx 1904.00
+$$
+
+The result is lower than the future payment because money received later is worth less than money held today when the discount rate is positive. In a full fixed-income valuation, the rate would normally be consistent with the instrument's compounding convention, day-count basis, and payment schedule. A complete bond price would discount each coupon and principal cash flow separately rather than treating the investment as one payment.
 
 ### Practical limitations
 
