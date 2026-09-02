@@ -99,7 +99,7 @@ $$
 The optimizer chooses the parameters that make the total squared residual as small as possible:
 
 $$
-\widehat{p} = \arg\min_p \operatorname{SSE}(p)
+\widehat{p} = \arg\min_p \mathrm{SSE}(p)
 $$
 
 Squaring makes positive and negative errors contribute equally and penalizes large misses more heavily. The resulting curve is therefore the NSS curve with the smallest total squared deviation from the 15 observed rates, according to this objective. This is a calibration criterion, not a claim that the observations are noise-free or that the model is economically true.
