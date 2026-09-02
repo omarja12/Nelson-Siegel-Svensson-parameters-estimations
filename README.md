@@ -8,7 +8,7 @@ The project started as an individual computational-finance assignment and is pre
 
 ## Explore the project
 
-Open [index.html](index.html) in a browser, or serve the repository locally:
+Open [index.html](index.html) in a browser, or read the theory in the dedicated [project notes page](notes.html). You can serve the repository locally:
 
 ```powershell
 python -m http.server 4173
@@ -95,7 +95,7 @@ This is a direct least-squares calibration rather than a production pricing curv
 The model is used to estimate rates at 9M, 3.5Y, 12.5Y, and 25Y. These maturities are not all present in the source quotes, but evaluating the calibrated function at each requested $t$ produces a consistent model-based interpolation:
 
 $$
-\widehat{y}(t^{*}) = y(t^{*}; \widehat{p})
+\widehat{y}(t_s) = y(t_s; \widehat{p})
 $$
 
 Repeating this calculation for every date creates a time series for each selected maturity. Comparing those series shows how the term structure moved during the archived observation window.
@@ -152,6 +152,8 @@ The script prints the source market data, fitted parameters, interpolated rates,
 | [styles.css](styles.css) | Responsive visual design for the project page |
 | [script.js](script.js) | Browser curve explorer and date selector |
 | [favicon.svg](favicon.svg) | Curve Lab browser tab icon |
+| [notes.html](notes.html) | Web version of the theory and methodology notes |
+| [notes.css](notes.css) | Responsive styling for the project notes page |
 | [Nelson_Siegel_Svensson_parameters_estimations.py](Nelson_Siegel_Svensson_parameters_estimations.py) | Standalone Python translation of the notebook workflow |
 | [Nelson_Siegel_Svensson_parameters_estimations.ipynb](Nelson_Siegel_Svensson_parameters_estimations.ipynb) | Original analysis notebook |
 | [ha_cf_2021.py](ha_cf_2021.py) | Original dated market data |

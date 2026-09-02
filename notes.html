@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102a43">
+  <meta name="description" content="Theory and methodology behind the Curve Lab Nelson-Siegel-Svensson estimation study.">
+  <title>Project Notes | Curve Lab</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="notes.css">
+  <script>
+    window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body class="notes-page">
+  <header class="site-header">
+    <a class="wordmark" href="index.html" aria-label="Curve Lab home"><span class="wordmark-mark">C</span><span>CURVE LAB</span></a>
+    <nav class="top-nav" aria-label="Primary navigation"><a href="index.html">Back to explorer <span aria-hidden="true">&#8592;</span></a><a class="nav-cta" href="Nelson_Siegel_Svensson_parameters_estimations.ipynb" download>Get the notebook <span aria-hidden="true">&#8599;</span></a></nav>
+  </header>
+  <main>
+    <section class="notes-hero section-shell"><p class="eyebrow"><span class="eyebrow-dot"></span> PROJECT NOTES / THEORY</p><h1>The mathematics<br>behind the <em>curve.</em></h1><p>How a finite set of market observations becomes a continuous, interpretable term structure.</p><div class="notes-meta"><span>READING TIME / 06 MIN</span><span>MODEL / NSS</span><span>DATA / 2020 SNAPSHOT</span></div></section>
+    <section class="notes-layout section-shell">
+      <aside class="notes-index"><p class="eyebrow">CONTENTS</p><a href="#why">01 / Why model a curve?</a><a href="#nss">02 / The NSS model</a><a href="#calibration">03 / Calibration</a><a href="#valuation">04 / Valuation tools</a><a href="#limits">05 / Limitations</a></aside>
+      <article class="notes-content">
+        <section id="why"><p class="eyebrow">01 / THE PROBLEM</p><h2>From points to a term structure</h2><p>A yield curve maps the maturity of a fixed-income instrument to its yield. Market data rarely provides a quote for every possible maturity, so a model can produce a continuous curve from a finite set of observations.</p><p>This study works with 15 tenors, from three months to thirty years. Each observation is a pair $(t_i, y_i)$, where $t_i$ is maturity in years and $y_i$ is the quoted market yield.</p></section>
+        <section id="nss"><p class="eyebrow">02 / THE MODEL</p><h2>Nelson-Siegel-Svensson</h2><p>The NSS model combines a long-run level, a slope factor, and two curvature factors:</p><div class="notes-formula">\[ y(t) = \beta_0 + \beta_1 L_1(t; \tau_1) + \beta_2 L_2(t; \tau_1) + \beta_3 L_3(t; \tau_2) \]</div><p>The loading functions are:</p><div class="equation-stack"><div>\[ L_1(t; \tau_1) = \frac{1-e^{-t/\tau_1}}{t/\tau_1} \]</div><div>\[ L_2(t; \tau_1) = \frac{1-e^{-t/\tau_1}}{t/\tau_1} - e^{-t/\tau_1} \]</div><div>\[ L_3(t; \tau_2) = \frac{1-e^{-t/\tau_2}}{t/\tau_2} - e^{-t/\tau_2} \]</div></div><div class="notes-table"><div><b>&beta;<sub>0</sub></b><span>Long-run level</span></div><div><b>&beta;<sub>1</sub></b><span>Short-term slope</span></div><div><b>&beta;<sub>2</sub>, &beta;<sub>3</sub></b><span>Curvature effects</span></div><div><b>&tau;<sub>1</sub>, &tau;<sub>2</sub></b><span>Decay constants</span></div></div><p>As \(t\) becomes large, the exponential terms approach zero and the curve approaches \(\beta_0\). This gives the model an interpretable long-end anchor while allowing more than one hump.</p></section>
+        <section id="calibration"><p class="eyebrow">03 / THE FIT</p><h2>Calibration by least squares</h2><p>For each date, the optimizer starts with a six-parameter initial guess and minimizes the difference between the model and the observed yields:</p><div class="notes-formula">\[ \mathrm{SSE}(p) = \sum_{i=1}^{n} \left[y(t_i; p)-y_i\right]^2 \]</div><p>The fitted vector contains \((\beta_0, \beta_1, \beta_2, \beta_3, \tau_1, \tau_2)\). The same calibrated function can then evaluate an unquoted maturity, such as 9M or 25Y.</p><div class="method-callout"><span>IMPLEMENTATION</span><strong>scipy.optimize.minimize</strong><small>One independent fit for each of the five market dates.</small></div></section>
+        <section id="valuation"><p class="eyebrow">04 / THE TOOLS</p><h2>Interpolation and valuation</h2><div class="notes-columns"><div><h3>Model-based interpolation</h3><p>For a requested maturity $t^*$, the estimate is simply the calibrated curve evaluated at that point:</p><div class="small-formula">ŷ(t*) = y(t*; p̂)</div><p>The project uses this to estimate 9M, 3.5Y, 12.5Y, and 25Y across all five dates.</p></div><div><h3>Day-count fractions</h3><p>Actual-day conventions express elapsed time using a selected denominator:</p><div class="small-formula">Act/360 = days / 360<br>Act/365 = days / 365</div><p>The convention changes the year fraction and therefore the accrual or discounting result.</p></div></div><div class="valuation-strip"><span>Present value</span><strong>PV = FV / (1 + r)<sup>T</sup></strong><small>The example discounts EUR 2,430.04 at 5% for five years with annual compounding.</small></div></section>
+        <section id="limits"><p class="eyebrow">05 / THE HONEST VERSION</p><h2>What this model does not claim</h2><p>This is an educational and portfolio artifact, not investment advice or a live market-data service. The input rates are hard-coded historical observations, the fit is unweighted, and no parameter bounds are imposed.</p><p>A production curve engine could extend this foundation with liquidity weights, constrained optimization, discount-factor fitting, instrument cash flows, and automated data ingestion. Keeping those boundaries visible is part of making the original work reproducible.</p><a class="button button-dark notes-button" href="index.html">Return to Curve Lab <span aria-hidden="true">&#8594;</span></a></section>
+      </article>
+    </section>
+  </main>
+  <footer class="site-footer section-shell"><span>CURVE LAB / PROJECT NOTES</span><span>Archived computational finance study</span><a href="#top">Back to top &#8593;</a></footer>
+</body>
+</html>
