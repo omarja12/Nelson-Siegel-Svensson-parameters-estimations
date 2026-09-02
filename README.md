@@ -95,7 +95,7 @@ This is a direct least-squares calibration rather than a production pricing curv
 The model is used to estimate rates at 9M, 3.5Y, 12.5Y, and 25Y. These maturities are not all present in the source quotes, but evaluating the calibrated function at each requested $t$ produces a consistent model-based interpolation:
 
 $$
-\widehat{y}(t^*) = y(t^*; \widehat{p})
+\widehat{y}(t^{*}) = y(t^{*}; \widehat{p})
 $$
 
 Repeating this calculation for every date creates a time series for each selected maturity. Comparing those series shows how the term structure moved during the archived observation window.
