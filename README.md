@@ -150,6 +150,7 @@ The script prints the source market data, fitted parameters, interpolated rates,
 | --- | --- |
 | [index.html](index.html) | Portfolio-facing interactive project page |
 | [styles.css](styles.css) | Responsive visual design for the project page |
+| [landing.css](landing.css) | NSS model section styling for the landing page |
 | [script.js](script.js) | Browser curve explorer and date selector |
 | [favicon.svg](favicon.svg) | Curve Lab browser tab icon |
 | [notes.html](notes.html) | Web version of the theory and methodology notes |
