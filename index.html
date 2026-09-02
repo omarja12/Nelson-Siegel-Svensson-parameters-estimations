@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102a43">
+  <meta name="description" content="An archived computational finance study of Nelson-Siegel-Svensson yield curve estimation.">
+  <title>Curve Lab | Nelson-Siegel-Svensson</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="#top" aria-label="Curve Lab home"><span class="wordmark-mark">C</span><span>CURVE LAB</span></a>
+    <nav class="top-nav" aria-label="Primary navigation">
+      <a href="#method">Method</a>
+      <a href="#findings">Findings</a>
+      <a class="nav-cta" href="Nelson_Siegel_Svensson_parameters_estimations.ipynb" download>Get the notebook <span aria-hidden="true">&#8599;</span></a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero section-shell">
+      <div class="hero-copy reveal">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> ARCHIVE  /  COMPUTATIONAL FINANCE</p>
+        <h1>Reading the shape<br>of <em>rates.</em></h1>
+        <p class="hero-intro">A compact study of how the Nelson-Siegel-Svensson model turns a handful of market observations into a smooth, interpretable term structure.</p>
+        <div class="hero-actions">
+          <a class="button button-dark" href="#explorer">Explore the curves <span aria-hidden="true">&#8595;</span></a>
+          <span class="hero-note">Original data: 05&#8211;09 Oct 2020</span>
+        </div>
+      </div>
+      <div class="hero-visual reveal reveal-delay" aria-label="Abstract yield curve visualization">
+        <div class="visual-label">YIELD / MATURITY</div>
+        <div class="curve-orbit orbit-one"></div><div class="curve-orbit orbit-two"></div><div class="curve-orbit orbit-three"></div>
+        <div class="visual-axis axis-x"><span>3M</span><span>5Y</span><span>10Y</span><span>30Y</span></div>
+        <div class="visual-axis axis-y"><span>+1.4%</span><span>0.0%</span><span>-0.6%</span></div>
+        <svg class="hero-chart" viewBox="0 0 560 360" role="img" aria-label="Five rising yield curve lines">
+          <path class="chart-grid" d="M38 50H530 M38 128H530 M38 206H530 M38 284H530 M38 50V284 M200 50V284 M360 50V284 M530 50V284" />
+          <path class="curve curve-a" d="M38 245 C110 245, 132 232, 190 210 S285 156, 350 126 S450 78, 530 55" /><path class="curve curve-b" d="M38 249 C110 248, 132 238, 190 218 S285 166, 350 137 S450 89, 530 66" /><path class="curve curve-c" d="M38 253 C110 251, 132 244, 190 225 S285 176, 350 149 S450 101, 530 77" /><path class="curve curve-d" d="M38 259 C110 257, 132 251, 190 233 S285 187, 350 160 S450 113, 530 89" /><path class="curve curve-e" d="M38 266 C110 264, 132 258, 190 241 S285 198, 350 173 S450 126, 530 101" />
+          <circle cx="530" cy="55" r="4" class="curve-point" /><circle cx="530" cy="101" r="4" class="curve-point" />
+        </svg>
+        <div class="visual-caption">Five observations<br><strong>one continuous signal</strong></div>
+      </div>
+    </section>
+
+    <section class="ticker" aria-label="Project facts"><div><span class="ticker-number">05</span><span>market dates</span></div><div><span class="ticker-number">15</span><span>quoted tenors</span></div><div><span class="ticker-number">06</span><span>NSS parameters</span></div><div><span class="ticker-number">02</span><span>day-count bases</span></div></section>
+
+    <section class="section-shell explorer-section" id="explorer">
+      <div class="section-heading reveal"><div><p class="eyebrow">01  /  CURVE EXPLORER</p><h2>Market points,<br><em>smoothed.</em></h2></div><p class="section-description">Select a snapshot to compare observed yields with the fitted curve. The shape is the signal: a negative short end, followed by a steady long-end lift.</p></div>
+      <div class="explorer-grid reveal">
+        <div class="chart-panel"><div class="panel-topline"><span id="selected-date">09 Oct 2020</span><span class="legend"><i class="legend-dot observed"></i>observed <i class="legend-line"></i>NSS fit</span></div><svg id="detail-chart" viewBox="0 0 760 380" role="img" aria-label="Selected market yield curve and fitted Nelson-Siegel-Svensson curve"></svg><div class="chart-labels"><span>3M</span><span>1Y</span><span>5Y</span><span>10Y</span><span>30Y</span></div></div>
+        <aside class="date-panel"><p class="eyebrow">SELECT A SNAPSHOT</p><div class="date-list" role="tablist" aria-label="Market dates"><button class="date-button active" role="tab" data-index="0" aria-selected="true"><span>09 Oct</span><b>2020</b></button><button class="date-button" role="tab" data-index="1" aria-selected="false"><span>09 Sep</span><b>2020</b></button><button class="date-button" role="tab" data-index="2" aria-selected="false"><span>07 Aug</span><b>2020</b></button><button class="date-button" role="tab" data-index="3" aria-selected="false"><span>09 Jul</span><b>2020</b></button><button class="date-button" role="tab" data-index="4" aria-selected="false"><span>09 Jun</span><b>2020</b></button></div><div class="metric-callout"><span>30Y rate</span><strong id="long-rate">0.854%</strong><small id="curve-move">-0.22 pts vs next snapshot</small></div></aside>
+      </div>
+    </section>
+
+    <section class="method-band" id="method"><div class="section-shell method-grid"><div class="method-intro reveal"><p class="eyebrow">02  /  THE MODEL</p><h2>Six parameters.<br><em>Many maturities.</em></h2><p>The NSS function captures level, slope, and two curvature effects, then extends the observed points into a usable term structure.</p></div><div class="formula-card reveal reveal-delay"><span class="formula-tag">NELSON &#8212; SIEGEL &#8212; SVENSSON</span><div class="formula">y(t) = &beta;<sub>0</sub> + &beta;<sub>1</sub>L<sub>1</sub>(t) + &beta;<sub>2</sub>L<sub>2</sub>(t) + &beta;<sub>3</sub>L<sub>3</sub>(t)</div><div class="parameter-row"><span><b>&beta;<sub>0</sub></b> level</span><span><b>&beta;<sub>1</sub></b> slope</span><span><b>&beta;<sub>2</sub> / &beta;<sub>3</sub></b> curvature</span><span><b>&tau;<sub>1</sub> / &tau;<sub>2</sub></b> decay</span></div></div></div></section>
+
+    <section class="section-shell findings-section" id="findings"><div class="section-heading reveal"><div><p class="eyebrow">03  /  RESEARCH NOTES</p><h2>What the curves<br><em>remember.</em></h2></div><p class="section-description">The notebook was built as a practical computational-finance assignment. These are the pieces that make it useful beyond a single chart.</p></div><div class="finding-grid reveal"><article class="finding-card"><span class="card-index">A</span><h3>Interpolate the curve</h3><p>Estimate 9M, 3.5Y, 12.5Y, and 25Y rates even when no direct quote exists at that maturity.</p><span class="card-footer">4 synthetic tenors</span></article><article class="finding-card featured"><span class="card-index">B</span><h3>Compare time</h3><p>Track how selected rates evolve across the five dated snapshots, preserving the shape of each curve.</p><span class="card-footer">5 dated snapshots</span></article><article class="finding-card"><span class="card-index">C</span><h3>Translate days to value</h3><p>Use Act/360 or Act/365 day-count fractions, then discount a future payment into today&#8217;s value.</p><span class="card-footer">EUR 2,430.04 example</span></article></div></section>
+
+    <section class="archive-note section-shell"><div class="archive-mark">04</div><div><p class="eyebrow">ARCHIVED WORK / KEPT INTACT</p><h2>Old enough to be honest.</h2><p>This page is a new lens on the original work. The dated Python data file and notebook remain as they were, preserving the project&#8217;s 2020 market snapshot and 2022 repository history.</p></div><a class="text-link" href="README.md">Read the project notes <span aria-hidden="true">&#8594;</span></a></section>
+  </main>
+  <footer class="site-footer section-shell"><span>CURVE LAB / NSS ESTIMATION</span><span>Built from an archived computational finance study</span><a href="#top">Back to top &#8593;</a></footer>
+  <script src="script.js"></script>
+</body>
+</html>
