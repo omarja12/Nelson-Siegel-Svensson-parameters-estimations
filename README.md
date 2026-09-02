@@ -8,7 +8,7 @@ The repository preserves the original data file and notebook as a reproducible r
 
 ## Explore the project
 
-Open [index.html](index.html) in a browser, or read the theory in the dedicated [project notes page](notes.html). You can serve the repository locally:
+Open [index.html](index.html) in a browser, or read the theory in the dedicated [numerical methods page](notes.html). You can serve the repository locally:
 
 ```powershell
 python -m http.server 4173
@@ -88,7 +88,25 @@ $$
 
 The fitted vector $p$ contains $(\beta_0, \beta_1, \beta_2, \beta_3, \tau_1, \tau_2)$. The implementation uses `scipy.optimize.minimize` independently for each of the five market dates. Once calibrated, the same function $y(t; p)$ can evaluate the curve at any positive maturity, including the synthetic tenors used in the project.
 
-This is a direct least-squares calibration rather than a production pricing curve. It does not impose parameter bounds, fit discount factors, or assign weights based on instrument liquidity. Those would be natural extensions for a market-grade implementation.
+#### What least squares is doing
+
+For a candidate parameter vector $p$, the model produces a fitted yield $\widehat{y}_i = y(t_i; p)$ at every observed maturity. The difference between the market observation and the fitted value is the residual:
+
+$$
+e_i = y_i - \widehat{y}_i
+$$
+
+The optimizer chooses the parameters that make the total squared residual as small as possible:
+
+$$
+\widehat{p} = \arg\min_p \operatorname{SSE}(p)
+$$
+
+Squaring makes positive and negative errors contribute equally and penalizes large misses more heavily. The resulting curve is therefore the NSS curve with the smallest total squared deviation from the 15 observed rates, according to this objective. This is a calibration criterion, not a claim that the observations are noise-free or that the model is economically true.
+
+The NSS calibration is nonlinear because $\tau_1$ and $\tau_2$ appear inside exponential functions. `scipy.optimize.minimize` searches the parameter space from the initial guess, evaluates the SSE repeatedly, and returns the parameter vector found at the minimum. Different starting values or parameter constraints can lead to different local solutions, which is why a production implementation would normally add bounds, diagnostics, convergence checks, and sensitivity tests.
+
+This is a direct unweighted least-squares calibration rather than a production pricing curve. It gives every quoted tenor the same influence, even though market instruments may differ in liquidity, price precision, and risk. It also fits yields directly instead of fitting discount factors or zero-coupon prices. Natural extensions for a market-grade implementation include weighted least squares, parameter bounds such as $\tau_1,\tau_2 > 0$, robust error diagnostics, and instrument-level cash-flow pricing.
 
 ### Interpolation and curve evolution
 
@@ -154,8 +172,8 @@ The script prints the source market data, fitted parameters, interpolated rates,
 | [notes-link.css](notes-link.css) | Prominent project-notes link styling |
 | [script.js](script.js) | Browser curve explorer and date selector |
 | [favicon.svg](favicon.svg) | Curve Lab browser tab icon |
-| [notes.html](notes.html) | Web version of the theory and methodology notes |
-| [notes.css](notes.css) | Responsive styling for the project notes page |
+| [notes.html](notes.html) | Web version of the numerical methods and theory |
+| [notes.css](notes.css) | Responsive styling for the numerical methods page |
 | [Nelson_Siegel_Svensson_parameters_estimations.py](Nelson_Siegel_Svensson_parameters_estimations.py) | Standalone Python translation of the notebook workflow |
 | [Nelson_Siegel_Svensson_parameters_estimations.ipynb](Nelson_Siegel_Svensson_parameters_estimations.ipynb) | Original analysis notebook |
 | [ha_cf_2021.py](ha_cf_2021.py) | Original dated market data |
